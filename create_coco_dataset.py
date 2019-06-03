@@ -2,7 +2,7 @@ import argparse
 import json
 from converter import tsv2coco
 
-parser = argparse.ArgumentParser(description='conver tsv to coco dataset')
+parser = argparse.ArgumentParser(description='convert tsv to coco dataset')
 
 parser.add_argument('-c', '--categories', help='path to json categories', type=str, default=None)
 parser.add_argument('-r', '--root', help='root folder', type=str, required=True)
