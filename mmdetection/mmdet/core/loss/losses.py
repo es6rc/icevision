@@ -249,7 +249,7 @@ def _expand_binary_labels(labels, label_weights, label_channels):
 
 
 def iou_loss(pred_bboxes, target_bboxes, reduction='mean'):
-    ious = bbox_overlaps(pred_bboxes, target_bboxes, is_aligned=True)
+    ious = bbox_overlaps(pred_bboxes, target_bboxes, mode='giou', is_aligned=True)
     loss = -ious.log()
 
     reduction_enum = F._Reduction.get_enum(reduction)

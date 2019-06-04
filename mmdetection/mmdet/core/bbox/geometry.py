@@ -19,7 +19,7 @@ def bbox_overlaps(bboxes1, bboxes2, mode='iou', is_aligned=False):
         ious(Tensor): shape (m, n) if is_aligned == False else shape (m, 1)
     """
 
-    assert mode in ['iou', 'iof']
+    assert mode in ['iou', 'iof', 'giou']
 
     rows = bboxes1.size(0)
     cols = bboxes2.size(0)
@@ -42,6 +42,22 @@ def bbox_overlaps(bboxes1, bboxes2, mode='iou', is_aligned=False):
             area2 = (bboxes2[:, 2] - bboxes2[:, 0] + 1) * (
                 bboxes2[:, 3] - bboxes2[:, 1] + 1)
             ious = overlap / (area1 + area2 - overlap)
+
+        elif mode == 'giou':
+
+            area2 = (bboxes2[:, 2] - bboxes2[:, 0] + 1) * (
+                    bboxes2[:, 3] - bboxes2[:, 1] + 1)
+            ious = overlap / (area1 + area2 - overlap)
+
+            # find enclosing box
+            lt_c = torch.min(bboxes1[:, :2], bboxes2[:, :2])  # [rows, 2]
+            rb_c = torch.max(bboxes1[:, 2:], bboxes2[:, 2:])  # [rows, 2]
+            wh = (rb_c - lt_c + 1).clamp(min=0)  # [rows, 2]
+            area_c = wh[:, 0] * wh[:, 1]
+
+            U = area1 + area2 - overlap
+            ious = ious - (area_c - U) / area_c
+
         else:
             ious = overlap / area1
     else:
