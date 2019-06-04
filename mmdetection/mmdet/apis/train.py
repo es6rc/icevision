@@ -4,6 +4,8 @@ import re
 from collections import OrderedDict
 
 import torch
+
+import torchcontrib.optim import SWA
 from mmcv.runner import Runner, DistSamplerSeedHook, obj_from_dict
 from mmcv.parallel import MMDataParallel, MMDistributedDataParallel
 
@@ -144,6 +146,9 @@ def _dist_train(model, dataset, cfg, validate=False):
     model = MMDistributedDataParallel(model.cuda())
     # build runner
     optimizer = build_optimizer(model, cfg.optimizer)
+    if cfg.swa is not None:
+        optimizer = SWA(optimizer, cfg.swa['swa_start'], cfg.swa['swa_freq'], cfg.swa['swa_lr'])
+
     runner = Runner(model, batch_processor, optimizer, cfg.work_dir,
                     cfg.log_level)
     # register hooks
