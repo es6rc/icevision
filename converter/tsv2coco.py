@@ -225,14 +225,14 @@ def tsv2coco(categories_path, root, image_dir, annotation_dir, extension=".jpg")
     print('-' * 48)
     print('Signs of the competition')
     print('-' * 48)
-    for key, classes in global_info.items():
-        print('sign - {0}, count - {1}'.format(key, classes))
+    for key, item in global_info.items():
+        print('sign - {0}, count - {1}'.format(key, item))
 
     print('-' * 48)
     print('Other signs on image')
     print('-' * 48)
-    for key, classes in other_classes.items():
-        print('sign - {0}, count - {1}'.format(key, classes))
+    for key, item in other_classes.items():
+        print('sign - {0}, count - {1}'.format(key, item))
 
     return coco_output
 
