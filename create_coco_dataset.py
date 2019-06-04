@@ -14,7 +14,7 @@ parser.add_argument('-d', '--data', help='train or validation set', required=Tru
 
 args = vars(parser.parse_args())
 
-coco_output = tsv2coco(args['categories'], args['root'], args['image_dir'], args['annotation_dir'], args['norm'])
+coco_output = tsv2coco(args['categories'], args['root'], args['image_dir'], args['annotation_dir'], is_compute_norm=args['norm'])
 
 with open('{0}/instances_{1}2017.json'.format(args['root'], args['data']), 'w') as output_json_file:
     json.dump(coco_output, output_json_file)
