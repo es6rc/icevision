@@ -175,6 +175,8 @@ def tsv2coco(categories_path, root, image_dir, annotation_dir, extension=".jpg")
 
     annotation_files = filter_for_annotations(root, annotation_dir)
 
+    global_info = {c["name"]: 0 for c in categories}
+
     for annotation_filename in annotation_files:
 
         tsv = read_tsv(annotation_filename)
@@ -190,7 +192,16 @@ def tsv2coco(categories_path, root, image_dir, annotation_dir, extension=".jpg")
         coco_output["images"].append(image_info)
 
         for index, row in tsv.iterrows():
-            class_id = [x["id"] for x in categories if x["name"] == str(row["class"])][0]
+
+            classes = [x for x in categories if x["name"] == str(row["class"])]
+
+            if len(classes) == 0:
+                continue
+
+            class_id = classes[0]["id"]
+            name = classes[0]["name"]
+
+            global_info[name] += 1
 
             category_info = {"id": class_id, "is_crowd": 0 if row["occluded"] is None else int(row["occluded"])}
 
@@ -204,6 +215,9 @@ def tsv2coco(categories_path, root, image_dir, annotation_dir, extension=".jpg")
             segmentation_id = segmentation_id + 1
 
         image_id = image_id + 1
+
+    for key, classes in global_info.items():
+        print('sign - {0}, count - {1}'.format(key, classes))
 
     return coco_output
 

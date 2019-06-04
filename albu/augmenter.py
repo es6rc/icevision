@@ -174,8 +174,6 @@ def orig2aug(categories, root,
 
     annotation_files = filter_for_annotations(root, annotation_dir)
 
-    index = 0
-
     for idx, annotation_filename in enumerate(annotation_files):
 
         tsv = read_tsv(annotation_filename)
@@ -217,10 +215,8 @@ def orig2aug(categories, root,
 
             augmented = aug(**annotations)
 
-            base_name = '0' * (6 - len(str(index))) + str(index)
+            base_name = '0' * (6 - len(str(idx))) + str(idx)
             image_save_path = os.path.join(root, image_save_dir, base_name + extension)
             annotation_save_path = os.path.join(root, annotation_save_dir, base_name + ".tsv")
 
             save_augmented(augmented, coco_output, image_save_path, annotation_save_path)
-
-            index += 1
