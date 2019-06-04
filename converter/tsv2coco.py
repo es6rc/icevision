@@ -176,6 +176,7 @@ def tsv2coco(categories_path, root, image_dir, annotation_dir, extension=".jpg")
     annotation_files = filter_for_annotations(root, annotation_dir)
 
     global_info = {c["name"]: 0 for c in categories}
+    other_classes = {}
 
     for annotation_filename in annotation_files:
 
@@ -196,6 +197,11 @@ def tsv2coco(categories_path, root, image_dir, annotation_dir, extension=".jpg")
             classes = [x for x in categories if x["name"] == str(row["class"])]
 
             if len(classes) == 0:
+                if isinstance(row["class"], str):
+                    if row["class"] in other_classes:
+                        other_classes[row["class"]] += 1
+                    else:
+                        other_classes[row["class"]] = 1
                 continue
 
             class_id = classes[0]["id"]
@@ -216,7 +222,16 @@ def tsv2coco(categories_path, root, image_dir, annotation_dir, extension=".jpg")
 
         image_id = image_id + 1
 
+    print('-' * 48)
+    print('Signs of the competition')
+    print('-' * 48)
     for key, classes in global_info.items():
+        print('sign - {0}, count - {1}'.format(key, classes))
+
+    print('-' * 48)
+    print('Other signs on image')
+    print('-' * 48)
+    for key, classes in other_classes.items():
         print('sign - {0}, count - {1}'.format(key, classes))
 
     return coco_output
