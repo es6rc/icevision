@@ -195,6 +195,7 @@ def tsv2coco(categories_path, root, image_dir, annotation_dir, extension=".jpg",
 
         if is_compute_norm:
             im_array = np.asarray(image)
+            im_array = np.resize(im_array, (512, 512, 3))
             list_image.append(im_array)
 
         image_info = create_image_info(
@@ -232,9 +233,11 @@ def tsv2coco(categories_path, root, image_dir, annotation_dir, extension=".jpg",
         image_id = image_id + 1
 
     if is_compute_norm:
-        array = np.array(list_image)
-        mean = array.mean()
-        std = array.std()
+        images = [image.reshape(3, -1) for image in list_image]
+        images = np.concatenate(images, 1)
+        mean = images.mean(1)
+        std = images.std(1)
+
         print('mean - {0}, std - {1}'.format(mean, std))
 
     print('-' * 48)
@@ -256,4 +259,3 @@ def tsv2coco(categories_path, root, image_dir, annotation_dir, extension=".jpg",
     print('Sum - {0}'.format(sum))
 
     return coco_output
-
