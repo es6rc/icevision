@@ -19,8 +19,8 @@ def csv_rtv2tsv(csv_file, annotation_dir):
                 new_df.to_csv(path, sep='\t', index=False)
 
             cur_name = row['filename']
-            cur_image = {'class': [], 'xtl' : [], 'ytl' : [], 
-                                      'xbr' : [], 'ybr' : []}
+            cur_image = {'class': [], 'xtl' : [], 'ytl' : [], 'xbr' : [], 'ybr' : [], 
+                         'temporary' : [], 'occluded' : [], 'data' : []}
 
         class_ = '.'.join(row['sign_class'].split('_'))
         cur_image['class'].append(class_)
@@ -36,6 +36,12 @@ def csv_rtv2tsv(csv_file, annotation_dir):
         
         ybr = ytl + row['height']
         cur_image['ybr'].append(ybr)
+
+        cur_image['temporary'].append('false')
+        cur_image['occluded'].append('false')
+        cur_image['data'].append('')
+
+
 
 
 parser = argparse.ArgumentParser(description='Convert RTS csv to IceVision tsv')
