@@ -42,8 +42,6 @@ def csv_rtv2tsv(csv_file, annotation_dir):
         cur_image['data'].append('')
 
 
-
-
 parser = argparse.ArgumentParser(description='Convert RTS csv to IceVision tsv')
 
 parser.add_argument('-i', '--input', help='RTS csv file', type=str,  required=True)
