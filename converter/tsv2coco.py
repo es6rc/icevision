@@ -1,5 +1,6 @@
 import datetime
 import json
+import numpy as np
 import pandas as pd
 import os
 import re
@@ -154,7 +155,7 @@ def read_tsv(file):
     return df
 
 
-def tsv2coco(categories_path, root, image_dir, annotation_dir, extension=".jpg"):
+def tsv2coco(categories_path, root, image_dir, annotation_dir, extension=".jpg", is_compute_norm=False):
 
     if categories_path is None:
         categories = CATEGORIES
@@ -178,6 +179,9 @@ def tsv2coco(categories_path, root, image_dir, annotation_dir, extension=".jpg")
     global_info = {c["name"]: 0 for c in categories}
     other_classes = {}
 
+    # compute mean, std
+    list_image = list()
+
     for annotation_filename in annotation_files:
 
         tsv = read_tsv(annotation_filename)
@@ -188,6 +192,11 @@ def tsv2coco(categories_path, root, image_dir, annotation_dir, extension=".jpg")
         image_filename = os.path.join(root, image_dir, image_name)
 
         image = Image.open(image_filename)
+
+        if is_compute_norm:
+            im_array = np.asarray(image)
+            list_image.append(im_array)
+
         image_info = create_image_info(
             image_id, os.path.basename(image_filename), image.size)
         coco_output["images"].append(image_info)
@@ -221,6 +230,12 @@ def tsv2coco(categories_path, root, image_dir, annotation_dir, extension=".jpg")
             segmentation_id = segmentation_id + 1
 
         image_id = image_id + 1
+
+    if is_compute_norm:
+        array = np.array(list_image)
+        mean = array.mean()
+        std = array.std()
+        print('mean - {0}, std - {1}'.format(mean, std))
 
     print('-' * 48)
     print('Signs of the competition')
