@@ -5,3 +5,4 @@ Ice Vision is an international artificial intelligence competition in computer v
 - https://github.com/icevision/annotations
 - https://github.com/iasawseen/Kaggle-TGS-salt-solution/blob/master/models/sawseennet.py
 - https://github.com/generalized-iou/Detectron.pytorch
+- https://github.com/generalized-iou/g-darknet
