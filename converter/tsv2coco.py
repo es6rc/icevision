@@ -190,7 +190,7 @@ def tsv2coco(categories_path, root, image_dir, annotation_dir, extension=".jpg")
         coco_output["images"].append(image_info)
 
         for index, row in tsv.iterrows():
-            class_id = [x["id"] for x in CATEGORIES if x["name"] == str(row["class"])][0]
+            class_id = [x["id"] for x in categories if x["name"] == str(row["class"])][0]
 
             category_info = {"id": class_id, "is_crowd": 0 if row["occluded"] is None else int(row["occluded"])}
 

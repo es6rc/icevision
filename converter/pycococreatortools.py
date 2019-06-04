@@ -1,12 +1,4 @@
-import os
-import re
 import datetime
-import numpy as np
-from itertools import groupby
-
-
-convert = lambda text: int(text) if text.isdigit() else text.lower()
-natrual_key = lambda key: [ convert(c) for c in re.split('([0-9]+)', key) ]
 
 
 def create_image_info(image_id, file_name, image_size,
@@ -35,13 +27,16 @@ def create_annotation_info(annotation_id, image_id, category_info,
     width, height = bounding_box[2] - bounding_box[0], bounding_box[3] - bounding_box[1]
     area = width * height
 
+    bounding_box = list(bounding_box)
+    bounding_box = [*bounding_box[0:2], bounding_box[2]-bounding_box[0], bounding_box[3]-bounding_box[1]]
+
     annotation_info = {
         "id": annotation_id,
         "image_id": image_id,
         "category_id": category_info["id"],
         "iscrowd": is_crowd,
         "area": area,
-        "bbox": list(bounding_box),
+        "bbox": bounding_box,
         "segmentation": None,
         "width": image_size[0],
         "height": image_size[1],
