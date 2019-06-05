@@ -152,16 +152,25 @@ def save_augmented(annotations, coco_output, image_save_path, annotation_save_pa
             "data": "",
         })
 
-    df = pd.DataFrame(tsv)
+    if len(tsv) > 0:
+        df = pd.DataFrame(tsv)
 
-    df.to_csv(annotation_save_path, sep="\t", index=False,
-              columns=['class', 'xtl', 'ytl', 'xbr', 'ybr', 'temporary', 'occluded', 'data'])
+        df.to_csv(annotation_save_path, sep="\t", index=False,
+                  columns=['class', 'xtl', 'ytl', 'xbr', 'ybr', 'temporary', 'occluded', 'data'])
 
 
 def orig2aug(categories, root,
              image_dir, annotation_dir,
              image_save_dir, annotation_save_dir,
              extension=".jpg", data="train"):
+
+    im_save_path = os.path.join(root, image_save_dir)
+    ann_save_path = os.path.join(root, annotation_save_dir)
+
+    if not os.path.exists(im_save_path):
+        os.mkdir(im_save_path)
+    if not os.path.exists(ann_save_path):
+        os.mkdir(ann_save_path)
 
     if categories is None:
         categories = CATEGORIES
