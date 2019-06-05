@@ -5,7 +5,7 @@ from collections import OrderedDict
 
 import torch
 
-import torchcontrib.optim import SWA
+from torchcontrib.optim import SWA
 from mmcv.runner import Runner, DistSamplerSeedHook, obj_from_dict
 from mmcv.parallel import MMDataParallel, MMDistributedDataParallel
 
@@ -65,7 +65,6 @@ def train_detector(model,
 
 def build_optimizer(model, optimizer_cfg):
     """Build optimizer from configs.
-
     Args:
         model (:obj:`nn.Module`): The model with parameters to be optimized.
         optimizer_cfg (dict): The config dict of the optimizer.
@@ -82,7 +81,6 @@ def build_optimizer(model, optimizer_cfg):
                   (except for the normalization layers), and
                   `norm_decay_mult` will be multiplied to the weight decay
                   for all weight and bias parameters of normalization layers.
-
     Returns:
         torch.optim.Optimizer: The initialized optimizer.
     """
