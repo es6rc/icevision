@@ -5,7 +5,7 @@ from collections import OrderedDict
 
 import torch
 
-import torchcontrib.optim import SWA
+from torchcontrib.optim import SWA
 from mmcv.runner import Runner, DistSamplerSeedHook, obj_from_dict
 from mmcv.parallel import MMDataParallel, MMDistributedDataParallel
 
