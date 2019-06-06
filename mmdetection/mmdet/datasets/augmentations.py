@@ -62,8 +62,9 @@ def apply_augmentation(img, gt_bboxes, gt_labels, stage='train'):
     gt_labels = list()
     for idx, bbox in enumerate(annotations['bboxes']):
         x_min, y_min, w, h = bbox
+        x_min, x_max, y_min, y_max = int(x_min), int(x_min + w), int(y_min), int(y_min + h)
         gt_label = annotations['category_id'][idx]
-        bboxes.append([x_min, y_min, w, h])
+        bboxes.append([x_min, y_min, x_max, y_max])
         gt_labels.append(gt_label)
 
     bboxes = np.array(bboxes, dtype=np.float32)
