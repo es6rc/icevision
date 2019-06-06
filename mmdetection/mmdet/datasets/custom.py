@@ -205,6 +205,10 @@ class CustomDataset(Dataset):
         if len(gt_bboxes) == 0:
             return None
 
+        # convert bbox to albu format x, y, w, h
+        for i in range(len(gt_labels)):
+            gt_bboxes[i][2] = gt_bboxes[i][2] - gt_bboxes[i][0]
+            gt_bboxes[i][3] = gt_bboxes[i][3] - gt_bboxes[i][1]
         # using albumentation
         img, gt_bboxes, gt_labels = apply_augmentation(img, gt_bboxes, gt_labels)
         # extra augmentation
