@@ -4,12 +4,12 @@ import cv2
 
 def get_training_augmentation(min_area=0., min_visibility=0.):
     train_transform = [
-
         albu.OneOf([
             albu.MotionBlur(p=.2),
             albu.MedianBlur(blur_limit=3, p=0.1),
             albu.Blur(blur_limit=3, p=0.1),
         ], p=0.2),
+        albu.ShiftScaleRotate(shift_limit=0, scale_limit=0, rotate_limit=15, p=0.5),
         albu.OneOf([
             albu.CLAHE(clip_limit=2),
             albu.IAASharpen(),
