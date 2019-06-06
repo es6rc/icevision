@@ -9,6 +9,7 @@ from .transforms import (ImageTransform, BboxTransform, MaskTransform,
                          SegMapTransform, Numpy2Tensor)
 from .utils import to_tensor, random_scale
 from .extra_aug import ExtraAugmentation
+from .augmentations import apply_augmentation
 
 
 class CustomDataset(Dataset):
@@ -204,10 +205,12 @@ class CustomDataset(Dataset):
         if len(gt_bboxes) == 0:
             return None
 
+        # using albumentation
+        img, gt_bboxes, gt_labels = apply_augmentation(img, gt_bboxes, gt_labels)
         # extra augmentation
-        if self.extra_aug is not None:
-            img, gt_bboxes, gt_labels = self.extra_aug(img, gt_bboxes,
-                                                       gt_labels)
+        # if self.extra_aug is not None:
+        #     img, gt_bboxes, gt_labels = self.extra_aug(img, gt_bboxes,
+        #                                                gt_labels)
 
         # apply transforms
         flip = True if np.random.rand() < self.flip_ratio else False
