@@ -30,7 +30,7 @@ def get_training_augmentation(min_area=0., min_visibility=0.):
         ]),
         albu.OneOf([
             albu.HorizontalFlip(p=0.5),
-            albu.RandomSizedCrop(min_max_height=(720, 1380), height=1380, width=720, interpolation=cv2.INTER_AREA)
+            #albu.RandomSizedCrop(min_max_height=(720, 1380), height=1380, width=720, interpolation=cv2.INTER_AREA)
         ], p=0.2)
     ]
     return albu.Compose(train_transform,
