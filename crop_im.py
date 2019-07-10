@@ -2,9 +2,9 @@ import os
 from albu import read_tsv, filter_for_annotations
 import shutil
 
-DATA_ROOT = "/media/z/Data/iv/annotated_data"
+DATA_ROOT = ""
 IM_DIR = "im"
-ANN_DIR = "all_training_annotations"
+ANN_DIR = "ann"
 AUG_ANN_DIR = "annotation-aug"
 
 def get_maxbtm(data_root, annotation_dir):
@@ -36,7 +36,7 @@ def checkbbox(data_root, ann_dir, aug_ann_dir):
         same = True
         if not comparison:
             for indx, row1 in aug_tsv.iterrows():
-                for idx, row2 in org_tsv.iterrows():
+                for idx, row2 in org_tsv.iterrows():  # Check by rows
                     if row1.equals(row2):
                         break
                     elif idx == org_tsv.shape[0]:
@@ -62,5 +62,5 @@ def cp_org_ann_files(data_root, ann_dir, aug_dir, save_dir):
 
 # get_maxbtm(DATA_ROOT, ANN_DIR)
 # checkbbox(DATA_ROOT, ANN_DIR, AUG_ANN_DIR)
-SAVE_DIR = 'new_annotations'
+SAVE_DIR = 'new_ann'
 cp_org_ann_files(DATA_ROOT, ANN_DIR, AUG_ANN_DIR, SAVE_DIR)
