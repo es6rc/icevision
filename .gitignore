@@ -18,6 +18,9 @@
 .idea/**/uiDesigner.xml
 .idea/**/dbnavigator.xml
 
+# mmdetection
+mmdetection
+
 # Gradle
 .idea/**/gradle.xml
 .idea/**/libraries
