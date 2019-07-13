@@ -119,7 +119,7 @@ def read_tsv(file):
 def filter_for_annotations(root, annotation_dir):
     file_types = ['*.tsv']
     file_types = r'|'.join([fnmatch.translate(x) for x in file_types])
-    file_name_prefix = '.*'
+    file_name_prefix = '.*'  # does nothing here
     files = [os.path.join(root, annotation_dir, file) for file in os.listdir(os.path.join(root, annotation_dir))]
     files = [f for f in files if re.match(file_types, f)]
     files = [f for f in files if re.match(file_name_prefix, os.path.splitext(os.path.basename(f))[0])]
@@ -184,7 +184,7 @@ def orig2aug(categories, root,
     annotation_files = filter_for_annotations(root, annotation_dir)
 
     for idx, annotation_filename in enumerate(annotation_files):
-
+        print('%dth of %d annotation files is being processed' %(idx, len(annotation_files)))
         tsv = read_tsv(annotation_filename)
 
         basename = os.path.basename(annotation_filename)
@@ -202,30 +202,31 @@ def orig2aug(categories, root,
         }
 
         for index, row in tsv.iterrows():
-            value = [x for x in categories if x["name"] == str(row["class"])][0]
-            class_id = value["id"]
-            name = value["name"]
+            value = [x for x in categories if x["name"] == str(row["class"])]
 
-            category_info = {"id": class_id, "is_crowd": 0 if row["occluded"] is None else int(row["occluded"])}
+            if value:
+                value = value[0]
+                class_id = value["id"]
+                name = value["name"]
+                category_info = {"id": class_id, "is_crowd": 0 if row["occluded"] is None else int(row["occluded"])}
+                annotation_info = create_annotation_info(0, 0, category_info,
+                                                         image_size, row.iloc[1:5])  # Dict type
 
-            annotation_info = create_annotation_info(
-                0, 0, category_info,
-                image_size, row.iloc[1:5])
-
-            if annotation_info is not None:
-                annotation_info['name'] = name
-                coco_output["annotations"].append(annotation_info)
-                coco_output["temporaries"].append(row["temporary"])
+                if annotation_info is not None:
+                    annotation_info['name'] = name  # add "name" key to athe annotation_info
+                    coco_output["annotations"].append(annotation_info)
+                    coco_output["temporaries"].append(row["temporary"])
 
         annotations = {'image': image, 'bboxes': [d['bbox'] for d in coco_output['annotations']],
                        'category_id': [d['name'] for d in coco_output['annotations']]}
 
         if len(annotations['bboxes']) > 0:
-
+            # if the image has bounding box data
             augmented = aug(**annotations)
 
-            base_name = '0' * (6 - len(str(idx))) + str(idx)
+            base_name = os.path.splitext(basename)[0] + '_aug'
             image_save_path = os.path.join(root, image_save_dir, base_name + extension)
             annotation_save_path = os.path.join(root, annotation_save_dir, base_name + ".tsv")
 
+            # For each frame that it has
             save_augmented(augmented, coco_output, image_save_path, annotation_save_path)
